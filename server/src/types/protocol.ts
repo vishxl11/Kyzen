@@ -52,7 +52,7 @@ type ExecutionResult=Message<ExecutionResultPayload,"EXECUTION_RESULT"> ;
 type ErrorPayload={
     message:string 
 }
-type Error=Message<ErrorPayload,"ERROR"> ;
+type ServerError=Message<ErrorPayload,"ERROR"> ;
 
 
 type UserJoinedPayload = {
@@ -74,4 +74,6 @@ type UserLeft = Message<UserLeftPayload, "USER_LEFT">
 
 
 
-export type{JoinRoom,RunCode,SessionJoined,ExecutionResult,Error,UserJoined,UserLeft} ;
+export type ClientMessage = JoinRoom | RunCode
+export type ServerMessage = SessionJoined | UserJoined | UserLeft | ExecutionResult | ServerError
+export type {Message}
