@@ -76,4 +76,4 @@ type UserLeft = Message<UserLeftPayload, "USER_LEFT">
 
 export type ClientMessage = JoinRoom | RunCode
 export type ServerMessage = SessionJoined | UserJoined | UserLeft | ExecutionResult | ServerError
-export type {Message}
+export type {Message,JoinRoom}
