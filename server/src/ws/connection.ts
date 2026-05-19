@@ -2,7 +2,8 @@ import{WebSocket,WebSocketServer} from 'ws' ;
 import CreateMessage from '../utils/createMessage.js'
 import sendMessage from '../utils/sendMessaage.js';
 import validateMessage from '../utils/validateMessage.js';
-import {roomState} from '../state/room.js';
+import joinRoom from './handlers/joinRoom.js';
+import { closeRoom } from './handlers/closeRoom.js';
 
 function connect(wss:WebSocketServer)
 {
@@ -41,12 +42,7 @@ function connect(wss:WebSocketServer)
 
             if(parsedJson.type=='JOIN_ROOM')
             {
-                roomState(parsedJson,socket) ;
-
-              // add the single joined user message 
-              // broadcast message also getuser function 
-
-
+               joinRoom(socket,parsedJson) ; 
             }
             else
             {
@@ -56,6 +52,13 @@ function connect(wss:WebSocketServer)
 
             
 
+        })
+
+
+        socket.on("close",(code,reason)=>{
+            //when user leaves the room 
+
+             closeRoom(socket) ;
         })
 
 
