@@ -4,6 +4,7 @@ import sendMessage from '../utils/sendMessaage.js';
 import validateMessage from '../utils/validateMessage.js';
 import joinRoom from './handlers/joinRoom.js';
 import { closeRoom } from './handlers/closeRoom.js';
+import runCode from './handlers/runCode.js';
 
 function connect(wss:WebSocketServer)
 {
@@ -46,7 +47,7 @@ function connect(wss:WebSocketServer)
             }
             else
             {
-
+                 runCode(parsedJson) ;
             }
 
 
