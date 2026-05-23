@@ -22,20 +22,8 @@ export async function runCpp(code: string,input:string) {
     stderr: true,
   })
 
-return new Promise<{executionOut: string, statusCode: number,executionTime:number}>((resolve, reject) => {
-    logs.on('data', (chunk) => {
-        executionOut += chunk.slice(8).toString()
-    })
-    
-    logs.on('end', async () => {
-        const executionTime = Date.now() - startTime
-        const statusObject = await container.wait()
-        await container.remove()
-       resolve({ executionOut, statusCode: statusObject.StatusCode, executionTime })
-    })
+return await collectOutput(container,executionOut,startTime,logs) ;
 
-    logs.on('error', reject)
-})
 }
 
 export async function runPython(code:string,input:string)
@@ -56,20 +44,9 @@ export async function runPython(code:string,input:string)
     stderr: true,
   })
 
- return new Promise<{executionOut: string, statusCode: number,executionTime:number}>((resolve, reject) => {
-    logs.on('data', (chunk) => {
-        executionOut += chunk.slice(8).toString()
-    })
-    
-    logs.on('end', async () => {
-         const executionTime = Date.now() - startTime
-        const statusObject = await container.wait()
-        await container.remove()
-        resolve({ executionOut, statusCode: statusObject.StatusCode, executionTime })
-    })
+  return await collectOutput(container,executionOut,startTime,logs) ;
 
-    logs.on('error', reject)
-})
+
 }
 
 export async function runJavascript(code:string,input:string)
@@ -90,23 +67,48 @@ export async function runJavascript(code:string,input:string)
     stderr: true,
   })
 
-return new Promise<{executionOut: string, statusCode: number,executionTime:number}>((resolve, reject) => {
+return await collectOutput(container,executionOut,startTime,logs) ;;
+
+}
+
+function collectOutput(container:Docker.Container,executionOut:string,startTime:number,logs:NodeJS.ReadableStream)
+{   let timeoutRef:NodeJS.Timeout
+    let isResolved = false
+    const codeRunningPromise:Promise<{executionOut: string, statusCode: number, executionTime: number}>=new Promise((resolve, reject) => {
     logs.on('data', (chunk) => {
         executionOut += chunk.slice(8).toString()
     })
     
     logs.on('end', async () => {
-       const executionTime=Date.now()-startTime ;
+        const executionTime = Date.now() - startTime
+        if(isResolved) return 
+        clearTimeout(timeoutRef)
         const statusObject = await container.wait()
-        await container.remove()
-         resolve({ executionOut, statusCode: statusObject.StatusCode, executionTime })
+      try { await container.remove() } catch(e) {}
+
+       resolve({ executionOut, statusCode: statusObject.StatusCode, executionTime })
     })
 
     logs.on('error', reject)
 })
 
+    const timeLimitExceeded:Promise<{executionOut:string,statusCode:number,executionTime:number}>=new Promise((resolve,reject)=>{
+       timeoutRef=setTimeout(async ()=>{
+            isResolved = true 
+           try { await container.stop() } catch(e) {}
+        try { await container.remove() } catch(e) {}
+
+             resolve({
+            executionOut:"",
+            statusCode: -1,
+            executionTime: 10000
+        });
+
+        },10000)
+    }) 
+
+
+    return Promise.race([codeRunningPromise,timeLimitExceeded]) ;
 }
-
-
 
 
