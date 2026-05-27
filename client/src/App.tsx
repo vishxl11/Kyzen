@@ -1,9 +1,9 @@
-//import {WebSocketServer} from 'ws'
 
-function App(){
-  return(
-    <div>Hello World</div>
-  )
+import Room from "./pages/Room";
+function App() {
+  return (
+    <Room/>
+  );
 }
 
-export default App ; 
+export default App;
