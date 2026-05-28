@@ -1,14 +1,26 @@
 import Editor from "@monaco-editor/react"
 
+type CodeEditorProps = {
+  code: string;
+  setCode: React.Dispatch<React.SetStateAction<string>>;
+  language: string;
+};
 
-function CodeEditor() {
+
+function CodeEditor({
+  code,
+  setCode,
+  language,
+}: CodeEditorProps) {
   return (
    
  <div className="rounded-2xl overflow-hidden">
     <div className="h-5 bg-[#161616] border-b border-zinc-800"></div>
   <Editor
     height="calc(100vh - 9rem)"
-    defaultLanguage="cpp"
+    language={language}
+    value={code}
+    onChange={(value) => setCode(value || "")}
     defaultValue="// write code here"
     theme="vs-dark"
     width="100%"

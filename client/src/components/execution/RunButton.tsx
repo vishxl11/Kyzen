@@ -1,4 +1,12 @@
-function RunButton() {
+type RunButtonProps = {
+   onClick: () => void;
+   isRunning: boolean;
+};
+
+function RunButton({
+   onClick,
+   isRunning
+}: RunButtonProps) {
   return (
     <button
       className="
@@ -17,7 +25,7 @@ function RunButton() {
   select-none
   self-start
 "
-    >
+   onClick={onClick} >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
@@ -31,7 +39,11 @@ function RunButton() {
         />
       </svg>
 
-      Run
+          {
+            isRunning
+            ? "Running..."
+            : "Run"
+         }
     </button>
   );
 }

@@ -5,6 +5,9 @@ import { broadcastMessage } from "../../utils/broadcastMessage.js";
 export function closeRoom(socket:WebSocket)
 {
      const userInfo=releaseUser(socket)! ;
+     
+      if (!userInfo) return; 
+
      const innerMap=getUserMap(userInfo.roomId) ;
      const userArray=getUsers(userInfo.roomId) ;
      const userLeftMessage=CreateMessage('USER_LEFT',{

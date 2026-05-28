@@ -1,9 +1,19 @@
-function LanguageSelector()
+type LanguageSelectorProps = {
+  language: string;
+  setLanguage: React.Dispatch<React.SetStateAction<string>>;
+};
+
+
+function LanguageSelector({
+  language,
+  setLanguage,
+}: LanguageSelectorProps) 
 {
      return(
         <div className="text-blue-500 mt-2 mb-1.5 ml-4">
              <select
-        defaultValue="cpp"
+        value={language}
+        onChange={(e) => setLanguage(e.target.value)}
         className="
           bg-[#111111]
           text-white

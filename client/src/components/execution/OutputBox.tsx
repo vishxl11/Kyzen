@@ -1,4 +1,10 @@
-function OutputBox() {
+type OutputBoxProps = {
+  output: string;
+};
+
+function OutputBox({
+  output,
+}: OutputBoxProps) {
   return (
     <div className="h-[30%] w-full bg-[#111111] rounded-xl p-4 flex flex-col">
 
@@ -20,9 +26,11 @@ function OutputBox() {
           font-mono
         "
       >
-        <span className="text-zinc-500">
-          Run your code to see output...
-        </span>
+        {output || (
+          <span className="text-zinc-500">
+            Run your code to see output...
+          </span>
+        )}
       </div>
 
     </div>

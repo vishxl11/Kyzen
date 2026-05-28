@@ -1,4 +1,12 @@
-function InputBox() {
+type InputBoxProps = {
+  input: string;
+  setInput: React.Dispatch<React.SetStateAction<string>>;
+};
+
+function InputBox({
+  input,
+  setInput,
+}: InputBoxProps) {
   return (
    <div className="h-[24%] w-full bg-[#111111] rounded-xl p-4 flex flex-col">
       
@@ -7,6 +15,8 @@ function InputBox() {
       </h2>
 
       <textarea
+       value={input}
+      onChange={(e) => setInput(e.target.value)}
   className="
     flex-1
     w-full
