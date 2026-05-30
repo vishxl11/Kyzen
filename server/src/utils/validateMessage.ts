@@ -1,4 +1,5 @@
 import {z} from 'zod' 
+import yjsUpdate from '../ws/handlers/yjsUpdate.js';
 
 const JoinRoomSchema = z.object({
    type: z.literal("JOIN_ROOM"),
@@ -22,11 +23,36 @@ const RunCodeSchema = z.object({
    })
 });
 
+const YjsUpdateSchema = z.object({
+   type: z.literal("YJS_UPDATE"),
+   timestamp: z.number(),
+
+   payload: z.object({
+      roomId: z.string(),
+      update: z.string()
+   })
+});
+
+const awarenessUpdateSchema = z.object({
+   type: z.literal("AWARENESS_UPDATE"),
+   timestamp: z.number(),
+
+   payload: z.object({
+      roomId: z.string(),
+      update: z.string()
+   })
+});
+
+
 
 const IncomingMessageSchema =
    z.discriminatedUnion("type", [
       JoinRoomSchema,
-      RunCodeSchema
+      RunCodeSchema,
+      YjsUpdateSchema,
+      awarenessUpdateSchema
+      
+
    ]);
 
 

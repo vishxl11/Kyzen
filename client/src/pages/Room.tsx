@@ -7,8 +7,9 @@ import UserList from "../components/room/UserList";
 import RunButton from "../components/execution/RunButton";
 import type { ServerMessage } from "../types/protocol";
 import useWebSocket from "../hooks/useWebSocket";
-import { useState,useCallback } from "react";
+import { useState,useCallback,useRef } from "react";
 import { useParams } from "react-router-dom";
+import useYjs from "../hooks/useYjs";
 
 export default function Room()
 {  
@@ -17,7 +18,6 @@ export default function Room()
 const [connectedUsers, setConnectedUsers] = useState<{ userName: string }[]>([]);
 
 // --- EDITOR ---
-const [code, setCode] = useState<string>("");
 const [language, setLanguage] = useState<string>("javascript");
 
 // --- EXECUTION ---
@@ -28,6 +28,8 @@ const [isRunning, setIsRunning] = useState<boolean>(false); // to disable run bu
 // --- ROOM INFO (not useState, just read from router/localStorage) ---
 const { roomId} = useParams<{roomId: string }>();
 const userName = localStorage.getItem("userName")!;
+const applyRemoteUpdateRef = useRef<((base64: string) => void) | null>(null)
+const applyRemoteAwarenessRef = useRef<((base64: string) => void) | null>(null)
 
 
    const messageHandler = useCallback(
@@ -64,7 +66,17 @@ const userName = localStorage.getItem("userName")!;
          {
             setOutput(message.payload.error) ;
          }
+        
+         console.log(output) ;
          setIsRunning(false);
+      }
+      else if(message.type=="YJS_UPDATE")
+      {
+          applyRemoteUpdateRef.current?.(message.payload.update) 
+      }
+      else if(message.type=="AWARENESS_UPDATE")
+      {   console.log("applying remote awareness", message.payload.update)
+          applyRemoteAwarenessRef.current?.(message.payload.update) 
       }
 
    },
@@ -72,12 +84,15 @@ const userName = localStorage.getItem("userName")!;
 );
 
 
-            if(!roomId)
-            {
-            return <div>Room not found</div>;
-            }
+           
 
-     const send=useWebSocket(roomId,userName,messageHandler) ;
+     const send=useWebSocket(roomId!,userName,messageHandler) ;
+
+     const { ytext, awareness, applyRemoteUpdate, applyRemoteAwareness } = useYjs(roomId, userName, send)
+
+      // wire them up after both hooks are called
+      applyRemoteUpdateRef.current = applyRemoteUpdate
+      applyRemoteAwarenessRef.current = applyRemoteAwareness
 
      function handleRunCode()
         {
@@ -86,7 +101,7 @@ const userName = localStorage.getItem("userName")!;
         send(
             "RUN_CODE",
             {
-                code,
+                 code: ytext.toString(),
                 language,
                 input,
                 roomId
@@ -108,8 +123,8 @@ const userName = localStorage.getItem("userName")!;
              setLanguage={setLanguage}/>
 
             <CodeEditor
-            code={code}
-            setCode={setCode}
+            yText={ytext}
+            awareness={awareness}
             language={language}/>
 
 

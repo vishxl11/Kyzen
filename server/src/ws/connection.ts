@@ -5,6 +5,8 @@ import validateMessage from '../utils/validateMessage.js';
 import joinRoom from './handlers/joinRoom.js';
 import { closeRoom } from './handlers/closeRoom.js';
 import runCode from './handlers/runCode.js';
+import yjsUpdate from './handlers/yjsUpdate.js';
+import awarenessUpdateHandler from './handlers/awarenessUpdate.js';
 
 function connect(wss:WebSocketServer)
 {
@@ -45,9 +47,21 @@ function connect(wss:WebSocketServer)
             {
                joinRoom(socket,parsedJson) ; 
             }
-            else
+            else if(parsedJson.type=="YJS_UPDATE")
+            {   
+               yjsUpdate(socket,parsedJson) ;
+            }
+            else if(parsedJson.type=="AWARENESS_UPDATE")
+            {
+                awarenessUpdateHandler(socket,parsedJson) ;
+            }
+            else if(parsedJson.type=="RUN_CODE")
             {
                  runCode(parsedJson) ;
+            }
+            else
+            {
+                 socket.send("wrong message formatt")
             }
 
 

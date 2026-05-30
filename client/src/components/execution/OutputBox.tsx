@@ -24,6 +24,7 @@ function OutputBox({
           text-sm
           text-zinc-300
           font-mono
+          whitespace-pre-wrap 
         "
       >
         {output || (

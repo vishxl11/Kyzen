@@ -72,8 +72,20 @@ type UserLeftPayload = {
 }
 type UserLeft = Message<UserLeftPayload, "USER_LEFT">
 
+type YjsUpdatePayload={
+  roomId:string ,
+  update:string 
+}
+type YjsUpdate=Message<YjsUpdatePayload,"YJS_UPDATE"> 
+
+type awarenessUpdatePayload ={
+  roomId:string ,
+  update:string 
+} 
+type awarenessUpdate=Message<awarenessUpdatePayload,"AWARENESS_UPDATE"> ;
 
 
-export type ClientMessage = JoinRoom | RunCode
-export type ServerMessage = SessionJoined | UserJoined | UserLeft | ExecutionResult | ServerError
-export type {Message,JoinRoom,RunCode}
+
+export type ClientMessage = JoinRoom | RunCode | YjsUpdate | awarenessUpdate
+export type ServerMessage = SessionJoined | UserJoined | UserLeft | ExecutionResult | ServerError | YjsUpdate | awarenessUpdate
+export type {Message,JoinRoom,RunCode,YjsUpdate,awarenessUpdate}
