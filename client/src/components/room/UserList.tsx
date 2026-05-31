@@ -1,4 +1,14 @@
-function UserList() {
+type UserListProps = {
+  connectedUsers: string[];
+  roomId?: string;
+};
+
+function UserList({
+  connectedUsers,
+  roomId,
+}: UserListProps)
+{
+  
   return (
     <div className="flex-1 w-full bg-[#111111] rounded-xl p-4 flex gap-4">
 
@@ -9,30 +19,38 @@ function UserList() {
           Connected
         </div>
 
-        <div className="flex flex-col gap-3 overflow-auto">
+ <div className="flex flex-col gap-2 overflow-auto">
 
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
-            <span className="text-sm text-white">
-              Vishal
-            </span>
-          </div>
+  {connectedUsers.length === 0 ? (
+    <span className="text-zinc-500 text-sm">
+      No users connected
+    </span>
+  ) : (
+    connectedUsers.map((user) => (
+      
+      <div
+        key={user}
+        className="
+          flex
+          items-center
+          gap-2
+          px-2
+          py-1
+          rounded-md
+          hover:bg-zinc-900
+          transition-colors
+        "
+      >
+        <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
 
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
-            <span className="text-sm text-white">
-              Aryan
-            </span>
-          </div>
+        <span className="text-sm text-white">
+          {user}
+        </span>
+      </div>
+    ))
+  )}
 
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
-            <span className="text-sm text-white">
-              Akash
-            </span>
-          </div>
-
-        </div>
+</div>
       </div>
 
       {/* RIGHT SIDE */}
@@ -45,7 +63,7 @@ function UserList() {
           </div>
 
           <div className="text-white font-medium mb-4">
-            X7A92K
+           {roomId ?? "Unknown"}
           </div>
 
           <button

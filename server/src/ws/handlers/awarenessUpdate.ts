@@ -10,7 +10,7 @@ import { applyAwarenessUpdate } from 'y-protocols/awareness.js';
 export default function awarenessUpdateHandler(socket:WebSocket,parsedJson:awarenessUpdate)
 {
     const roomId=parsedJson.payload.roomId ;
-    console.log("AWARENESS_UPDATE received for room", roomId)
+    
 
     const update = new Uint8Array(Buffer.from(parsedJson.payload.update, 'base64'))
 

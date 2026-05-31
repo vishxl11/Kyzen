@@ -26,11 +26,16 @@ function CodeEditor({
     onMount={(editor, monaco) => {
     new MonacoBinding(yText, editor.getModel()!, new Set([editor]), awareness)
 
-    console.log("MonacoBinding awareness clientID:", awareness.clientID)
-
-    awareness.on('change', () => {
-        console.log("states in onMount:", JSON.stringify([...awareness.getStates()]))
+   editor.onDidChangeCursorPosition(() => {
+        const position = editor.getPosition()
+        awareness.setLocalStateField('cursor', position)
     })
+
+    const position = editor.getPosition()
+    if (position) awareness.setLocalStateField('cursor', position)
+    
+
+  
 
     // inject color styles for each remote user
     awareness.on('change', () => {
@@ -42,14 +47,37 @@ function CodeEditor({
             const styleId = `yjs-style-${clientId}`
             if (document.getElementById(styleId)) return
 
-            const style = document.createElement('style')
-            style.id = styleId
-            style.innerHTML = `
-                .yRemoteSelection-${clientId} { background-color: ${color}; opacity: 0.3; }
-                .yRemoteSelectionHead-${clientId} { border-color: ${color}; }
-                .yRemoteSelectionHead-${clientId}::after { content: "${state.name}"; background: ${color}; color: white; font-size: 11px; padding: 2px 6px; border-radius: 3px; position: absolute; top: -1.4em; left: -2px; white-space: nowrap; pointer-events: none; }
-            `
-            document.head.appendChild(style)
+           const style = document.createElement('style')
+style.id = styleId
+style.innerHTML = `
+    .yRemoteSelection-${clientId} { 
+        background-color: ${color}; 
+        opacity: 0.4; 
+        border-radius: 1px;
+    }
+    .yRemoteSelectionHead-${clientId} { 
+        position: absolute;
+        border-left: 2px solid ${color};
+        height: 100%;
+        box-sizing: border-box;
+    }
+    .yRemoteSelectionHead-${clientId}::after { 
+        content: "${state.name}"; 
+        background: ${color}; 
+        color: white; 
+        font-size: 11px; 
+        font-family: 'JetBrains Mono', monospace;
+        padding: 2px 6px; 
+        border-radius: 3px; 
+        position: absolute; 
+        top: -1.4em; 
+        left: -2px; 
+        white-space: nowrap; 
+        pointer-events: none;
+        z-index: 100;
+    }
+`
+document.head.appendChild(style)
         })
     })
 }}

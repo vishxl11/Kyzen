@@ -5,7 +5,7 @@ export function broadcastMessage(innerMap:Map<WebSocket,string> | undefined,data
 
      for(const [socket,userName] of innerMap!)
      {   
-          if(!except && socket==except)
+          if(except && socket==except)
           {
                continue ;
           }

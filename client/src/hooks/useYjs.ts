@@ -16,7 +16,7 @@ export default function useYjs(roomId:string,userName:string,sendMessage:(type: 
      const ydocRef = useRef(new Y.Doc())
     const awarenessRef = useRef(new Awareness(ydocRef.current))
     const ytext = ydocRef.current.getText('monaco')
-
+   
 
     useEffect(()=>{
 
@@ -25,7 +25,8 @@ export default function useYjs(roomId:string,userName:string,sendMessage:(type: 
 
         //It will fire when the local user will type anything
         const docUpdateHandler = (update: Uint8Array) => {
-             console.log("update fired, sending to server")
+            
+              if (origin === 'remote') return 
             const base64 = btoa(String.fromCharCode(...update))
             sendMessage("YJS_UPDATE", { roomId, update: base64 })
         }
@@ -55,14 +56,12 @@ export default function useYjs(roomId:string,userName:string,sendMessage:(type: 
 
     const applyRemoteUpdate = (base64: string) => {
         const update = Uint8Array.from(atob(base64), c => c.charCodeAt(0))
-        Y.applyUpdate(ydocRef.current, update)
+       Y.applyUpdate(ydocRef.current, update, 'remote')
     }
 
     const applyRemoteAwareness = (base64: string) => {
         const update = Uint8Array.from(atob(base64), c => c.charCodeAt(0))
         applyAwarenessUpdate(awarenessRef.current, update, null)
-       console.log("after apply, states:", awarenessRef.current.getStates())
-    console.log("awareness clientID:", awarenessRef.current.clientID)
     }
 
     return { ytext, awareness: awarenessRef.current, applyRemoteUpdate, applyRemoteAwareness }

@@ -15,7 +15,7 @@ export default function Room()
 {  
     
     // --- WHO IS IN THE ROOM ---
-const [connectedUsers, setConnectedUsers] = useState<{ userName: string }[]>([]);
+const [connectedUsers, setConnectedUsers] = useState<string[]>([]);
 
 // --- EDITOR ---
 const [language, setLanguage] = useState<string>("javascript");
@@ -35,27 +35,15 @@ const applyRemoteAwarenessRef = useRef<((base64: string) => void) | null>(null)
    const messageHandler = useCallback(
    (message: ServerMessage) => {
 
-      if(message.type=="USER_JOINED")
-      {
-         setConnectedUsers(
-            message.payload.connectedUsers
-         );
+     if(message.type=="USER_JOINED") {
+        setConnectedUsers(message.payload.connectedUsers)
       }
-
-      else if(message.type=="SESSION_JOINED")
-      {
-         setConnectedUsers(
-            message.payload.connectedUsers
-         );
+      else if(message.type=="SESSION_JOINED") {
+        setConnectedUsers(message.payload.connectedUsers)
       }
-
-      else if(message.type=="USER_LEFT")
-      {
-         setConnectedUsers(
-            message.payload.connectedUsers
-         );
+      else if(message.type=="USER_LEFT") {
+         setConnectedUsers(message.payload.connectedUsers)
       }
-
       else if(message.type=="EXECUTION_RESULT")
       {
          if(message.payload.output!="")
@@ -75,7 +63,7 @@ const applyRemoteAwarenessRef = useRef<((base64: string) => void) | null>(null)
           applyRemoteUpdateRef.current?.(message.payload.update) 
       }
       else if(message.type=="AWARENESS_UPDATE")
-      {   console.log("applying remote awareness", message.payload.update)
+      {   
           applyRemoteAwarenessRef.current?.(message.payload.update) 
       }
 
@@ -88,7 +76,7 @@ const applyRemoteAwarenessRef = useRef<((base64: string) => void) | null>(null)
 
      const send=useWebSocket(roomId!,userName,messageHandler) ;
 
-     const { ytext, awareness, applyRemoteUpdate, applyRemoteAwareness } = useYjs(roomId, userName, send)
+     const { ytext, awareness, applyRemoteUpdate, applyRemoteAwareness } = useYjs(roomId!, userName, send)
 
       // wire them up after both hooks are called
       applyRemoteUpdateRef.current = applyRemoteUpdate
@@ -144,7 +132,9 @@ const applyRemoteAwarenessRef = useRef<((base64: string) => void) | null>(null)
         <OutputBox
          output={output}/>
 
-        <UserList/>
+        <UserList
+         connectedUsers={connectedUsers}
+           roomId={roomId}/>
 
         </div>
 

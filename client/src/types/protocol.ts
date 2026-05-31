@@ -31,9 +31,7 @@ type RunCode=Message<RunCodePayload,"RUN_CODE"> ;
 
 type SessionJoinedPayload = {
   roomId: string
-  connectedUsers: {
-    userName: string
-  }[]
+  connectedUsers: string[]
 }
 type SessionJoined=Message<SessionJoinedPayload,"SESSION_JOINED"> ;
 
@@ -57,18 +55,14 @@ type ServerError=Message<ErrorPayload,"ERROR"> ;
 
 type UserJoinedPayload = {
   userName: string
-  connectedUsers: {
-    userName: string
-  }[]
+ connectedUsers: string[]
 }
 type UserJoined = Message<UserJoinedPayload, "USER_JOINED">
 
 
 type UserLeftPayload = {
   userName: string
-  connectedUsers: {
-    userName: string
-  }[]
+ connectedUsers: string[]
 }
 type UserLeft = Message<UserLeftPayload, "USER_LEFT">
 
