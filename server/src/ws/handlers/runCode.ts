@@ -11,6 +11,9 @@ export default async function runCode(message:RunCode)
     const code=message.payload.code ;
     const input=message.payload.input ;
 
+    const executionStartedMessage=CreateMessage("EXECUTION_STARTED",{roomId:roomId}) ;
+    broadcastMessage(getUserMap(roomId),executionStartedMessage) ;
+
     const executionOut=await codeExecution(language,code,input) ;
 
     if(executionOut.statusCode==0)

@@ -7,7 +7,7 @@ import UserList from "../components/room/UserList";
 import RunButton from "../components/execution/RunButton";
 import type { ServerMessage } from "../types/protocol";
 import useWebSocket from "../hooks/useWebSocket";
-import { useState,useCallback,useRef } from "react";
+import { useState,useCallback,useRef,useEffect } from "react";
 import { useParams } from "react-router-dom";
 import useYjs from "../hooks/useYjs";
 
@@ -31,6 +31,19 @@ const userName = localStorage.getItem("userName")!;
 const applyRemoteUpdateRef = useRef<((base64: string) => void) | null>(null)
 const applyRemoteAwarenessRef = useRef<((base64: string) => void) | null>(null)
 
+const [roomStartTime, setRoomStartTime] = useState<number | null>(null)
+const [roomActiveTime, setRoomActiveTime] = useState(0)
+
+useEffect(() => {
+    if (!roomStartTime) return
+    const interval = setInterval(() => {
+        const elapsed = Math.floor((Date.now() - roomStartTime) / 1000)
+        
+        setRoomActiveTime(elapsed)
+    }, 1000)
+    return () => clearInterval(interval)
+}, [roomStartTime])
+
 
    const messageHandler = useCallback(
    (message: ServerMessage) => {
@@ -39,7 +52,13 @@ const applyRemoteAwarenessRef = useRef<((base64: string) => void) | null>(null)
         setConnectedUsers(message.payload.connectedUsers)
       }
       else if(message.type=="SESSION_JOINED") {
+       
         setConnectedUsers(message.payload.connectedUsers)
+        setRoomStartTime(message.timestamp) 
+      }
+      else if(message.type=="EXECUTION_STARTED")
+      {
+         setIsRunning(true) ;
       }
       else if(message.type=="USER_LEFT") {
          setConnectedUsers(message.payload.connectedUsers)
@@ -89,7 +108,7 @@ const applyRemoteAwarenessRef = useRef<((base64: string) => void) | null>(null)
         send(
             "RUN_CODE",
             {
-                 code: ytext.toString(),
+                code: ytext.toString(),
                 language,
                 input,
                 roomId
@@ -134,7 +153,8 @@ const applyRemoteAwarenessRef = useRef<((base64: string) => void) | null>(null)
 
         <UserList
          connectedUsers={connectedUsers}
-           roomId={roomId}/>
+           roomId={roomId}
+           roomActiveTime={roomActiveTime}/>
 
         </div>
 

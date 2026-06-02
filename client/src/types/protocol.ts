@@ -78,8 +78,15 @@ type awarenessUpdatePayload ={
 } 
 type awarenessUpdate=Message<awarenessUpdatePayload,"AWARENESS_UPDATE"> ;
 
+type ExecutionStartedPayload={
+  roomId:string
+}
+type ExecutionStarted=Message<ExecutionStartedPayload,"EXECUTION_STARTED"> ;
+
+
+
 
 
 export type ClientMessage = JoinRoom | RunCode | YjsUpdate | awarenessUpdate
-export type ServerMessage = SessionJoined | UserJoined | UserLeft | ExecutionResult | ServerError | YjsUpdate | awarenessUpdate
+export type ServerMessage = SessionJoined | UserJoined | UserLeft | ExecutionResult | ServerError | YjsUpdate | awarenessUpdate |ExecutionStarted
 export type {Message,JoinRoom,RunCode}

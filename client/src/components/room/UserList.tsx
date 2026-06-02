@@ -1,13 +1,20 @@
 type UserListProps = {
   connectedUsers: string[];
   roomId?: string;
+  roomActiveTime : number ;
 };
 
 function UserList({
   connectedUsers,
   roomId,
+  roomActiveTime,
 }: UserListProps)
 {
+  function formatTime(seconds: number) {
+    const m = Math.floor(seconds / 60)
+    const s = seconds % 60
+    return `${m}m ${s}s`
+}
   
   return (
     <div className="flex-1 w-full bg-[#111111] rounded-xl p-4 flex gap-4">
@@ -90,7 +97,7 @@ function UserList({
           </div>
 
           <div className="text-sm text-zinc-300">
-            12m 41s
+            {formatTime(roomActiveTime)};
           </div>
 
         </div>

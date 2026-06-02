@@ -76,7 +76,7 @@ function collectOutput(container:Docker.Container,executionOut:string,startTime:
     let isResolved = false
     const codeRunningPromise:Promise<{executionOut: string, statusCode: number, executionTime: number}>=new Promise((resolve, reject) => {
     logs.on('data', (chunk) => {
-        executionOut += chunk.slice(8).toString()
+       executionOut += chunk.slice(8).toString().replace(/[^\x20-\x7E\n\r\t]/g, '')
     })
     
     logs.on('end', async () => {
