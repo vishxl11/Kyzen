@@ -11,6 +11,13 @@ export async function runCpp(code: string,input:string) {
     Cmd: ['sh', '-c', `echo '${Buffer.from(code).toString('base64')}' | base64 -d > /tmp/s.cpp && g++ /tmp/s.cpp -o /tmp/out && echo '${Buffer.from(input).toString('base64')}' | base64 -d | /tmp/out`],
     AttachStdout: true,
     AttachStderr: true,
+    HostConfig: {
+    Memory: 128 * 1024 * 1024,  // 128MB
+    CpuPeriod: 100000,
+    CpuQuota: 50000,             // 50% of one CPU core
+    NetworkMode: 'none',         // no internet access
+    PidsLimit: 50,               // prevent fork bombs
+            }
   })
 
   await container.start()
@@ -33,6 +40,13 @@ export async function runPython(code:string,input:string)
      Cmd:['sh', '-c', `echo '${Buffer.from(input).toString('base64')}' | base64 -d | python3 -c "$(echo '${Buffer.from(code).toString('base64')}' | base64 -d)"`],
     AttachStdout: true,
     AttachStderr: true,
+      HostConfig: {
+    Memory: 128 * 1024 * 1024,  // 128MB
+    CpuPeriod: 100000,
+    CpuQuota: 50000,             // 50% of one CPU core
+    NetworkMode: 'none',         // no internet access
+    PidsLimit: 50,               // prevent fork bombs
+            }
   })
 
   await container.start()
@@ -56,6 +70,13 @@ export async function runJavascript(code:string,input:string)
    Cmd:['sh', '-c', `echo '${Buffer.from(input).toString('base64')}'| base64 -d | node -e "$(echo '${Buffer.from(code).toString('base64')}' | base64 -d)"`],
     AttachStdout: true,
     AttachStderr: true,
+      HostConfig: {
+    Memory: 128 * 1024 * 1024,  // 128MB
+    CpuPeriod: 100000,
+    CpuQuota: 50000,             // 50% of one CPU core
+    NetworkMode: 'none',         // no internet access
+    PidsLimit: 50,               // prevent fork bombs
+            }
   })
 
   await container.start()
