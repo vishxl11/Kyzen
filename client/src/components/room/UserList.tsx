@@ -74,6 +74,8 @@ function UserList({
           </div>
 
           <button
+             onClick={() => navigator.clipboard.writeText(roomId ?? "")}
+             
             className="
               text-sm
               px-3
@@ -83,6 +85,7 @@ function UserList({
               hover:bg-zinc-700
               transition-colors
               text-white
+              cursor-pointer
             "
           >
             Invite
