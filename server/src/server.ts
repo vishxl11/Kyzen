@@ -3,6 +3,7 @@ import express from 'express'
 import { createServer } from 'http'
 import { WebSocketServer ,WebSocket} from 'ws'
 import connect from './ws/connection.js'
+import './queue/worker.js'
 
 const app = express()
 const server = createServer(app)

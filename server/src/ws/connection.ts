@@ -7,6 +7,7 @@ import { closeRoom } from './handlers/closeRoom.js';
 import runCode from './handlers/runCode.js';
 import yjsUpdate from './handlers/yjsUpdate.js';
 import awarenessUpdateHandler from './handlers/awarenessUpdate.js';
+import languageChanged from './handlers/languageChanged.js';
 
 function connect(wss:WebSocketServer)
 {
@@ -58,6 +59,10 @@ function connect(wss:WebSocketServer)
             else if(parsedJson.type=="RUN_CODE")
             {
                  runCode(parsedJson) ;
+            }
+            else if(parsedJson.type=="LANGUAGE_CHANGED")
+            {   
+                 languageChanged(parsedJson,socket) ;
             }
             else
             {

@@ -1,6 +1,6 @@
 type LanguageSelectorProps = {
   language: string;
-  setLanguage: React.Dispatch<React.SetStateAction<string>>;
+  setLanguage:(language: string) => void;
 };
 
 

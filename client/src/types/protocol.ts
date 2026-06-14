@@ -83,10 +83,13 @@ type ExecutionStartedPayload={
 }
 type ExecutionStarted=Message<ExecutionStartedPayload,"EXECUTION_STARTED"> ;
 
+type LanguageChangedPayload = { roomId: string, language: string }
+type LanguageChanged = Message<LanguageChangedPayload, "LANGUAGE_CHANGED">
 
 
 
 
-export type ClientMessage = JoinRoom | RunCode | YjsUpdate | awarenessUpdate
-export type ServerMessage = SessionJoined | UserJoined | UserLeft | ExecutionResult | ServerError | YjsUpdate | awarenessUpdate |ExecutionStarted
+
+export type ClientMessage = JoinRoom | RunCode | YjsUpdate | awarenessUpdate | LanguageChanged
+export type ServerMessage = SessionJoined | UserJoined | UserLeft | ExecutionResult | ServerError | YjsUpdate | awarenessUpdate |ExecutionStarted |LanguageChanged
 export type {Message,JoinRoom,RunCode}

@@ -43,6 +43,16 @@ const awarenessUpdateSchema = z.object({
    })
 });
 
+const languageChangedSchema=z.object({
+   type: z.literal("LANGUAGE_CHANGED"),
+   timestamp :z.number(),
+
+   payload: z.object({
+      roomId: z.string(),
+      language: z.string()
+   })
+}) ;
+
 
 
 const IncomingMessageSchema =
@@ -50,7 +60,8 @@ const IncomingMessageSchema =
       JoinRoomSchema,
       RunCodeSchema,
       YjsUpdateSchema,
-      awarenessUpdateSchema
+      awarenessUpdateSchema,
+      languageChangedSchema
       
 
    ]);

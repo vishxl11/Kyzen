@@ -85,6 +85,10 @@ useEffect(() => {
       {   
           applyRemoteAwarenessRef.current?.(message.payload.update) 
       }
+      else if(message.type=="LANGUAGE_CHANGED")
+      {  console.log("language change received") ;
+         setLanguage(message.payload.language)
+      }
 
    },
    []
@@ -116,6 +120,12 @@ useEffect(() => {
         );
         }
 
+    function handleLanguageChange(newLanguage: string) {
+        console.log("language changed to:", newLanguage)
+        setLanguage(newLanguage)
+        send("LANGUAGE_CHANGED", { roomId, language: newLanguage })
+    }
+
 
 
      return(
@@ -127,7 +137,7 @@ useEffect(() => {
 
             <LanguageSelector
              language={language}
-             setLanguage={setLanguage}/>
+             setLanguage={handleLanguageChange}/>
 
             <CodeEditor
             yText={ytext}
