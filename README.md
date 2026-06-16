@@ -83,7 +83,7 @@ All clients in room
 
 ```bash
 # Clone the repo
-git clone https://github.com/yourusername/kyzen
+git clone https://github.com/vishxl11/kyzen
 cd kyzen
 
 # Install server dependencies
