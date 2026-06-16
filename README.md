@@ -12,7 +12,8 @@ A real-time collaborative code execution engine. Think Google Docs meets LeetCod
 
 ## Architecture
 
-> 📊 [Architecture Diagram] 
+> 📊 [Architecture Diagram]
+![Architecture](architecture.png)
 
 ---
 
@@ -67,8 +68,6 @@ Node.js Worker
 ↓ WebSocket broadcast
 
 All clients in room
-
----
 
 ---
 
