@@ -6,7 +6,7 @@ A real-time collaborative code execution engine. Think Google Docs meets LeetCod
 
 ## Demo
 
-> 📹 [Watch Demo Video](Demp.mp4) 
+> 📹 [Watch Demo Video](Demp.gif) 
 
 ---
 
